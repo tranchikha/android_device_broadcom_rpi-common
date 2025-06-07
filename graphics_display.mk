@@ -34,13 +34,10 @@ PRODUCT_PACKAGES += \
     vulkan.broadcom
 
 # Allocator/Mapper 4.0 from external/minigbm
-# TODO: Support dmabuf allocator/mapper 4.0 which directly uses
-# linux,cma heap. It seems better to handle memory/buffers than
-# minigbm_gbm_mesa.
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
-    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
-    libgbm_mesa_wrapper
+    android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
+    gralloc.minigbm_dmabuf
 
 # hwcomposer3 - display HAL
 PRODUCT_PACKAGES += \
