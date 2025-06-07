@@ -39,7 +39,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 # Required apps to use for booting
 PRODUCT_PACKAGES += \
     Launcher3QuickStep \
-    TvSettingsTwoPanel \
+    Settings \
     StorageManager \
     SystemUI \
     LatinIME \
