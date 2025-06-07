@@ -46,7 +46,7 @@
 /dev/dri/renderD128                                                                     u:object_r:gpu_device:s0
 
 # Display HAL - hwcomposer3
-/vendor/bin/hw/android\.hardware\.graphics\.composer3-service\.ranchu                   u:object_r:hal_graphics_composer_default_exec:s0
+/vendor/bin/hw/android.hardware.composer.hwc3-service.drm                               u:object_r:hal_graphics_composer_default_exec:s0
 /dev/dri/card0                                                                          u:object_r:gpu_device:s0
 
 # Temp

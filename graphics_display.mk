@@ -43,12 +43,5 @@ PRODUCT_PACKAGES += \
     libgbm_mesa_wrapper
 
 # hwcomposer3 - display HAL
-# TODO: Clone and make our own hwc3 HAL. Do NOT depend
-# on goldfish-opengl namespace and marcos anymore
-PRODUCT_SOONG_NAMESPACES += device/generic/goldfish-opengl
-BUILD_EMULATOR_OPENGL := true
-BUILD_EMULATOR_OPENGL_DRIVER := true
-ENABLE_GOLDFISH_OPENGL_FOLDER := true
-
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer3-service.ranchu
+    android.hardware.composer.hwc3-service.drm
