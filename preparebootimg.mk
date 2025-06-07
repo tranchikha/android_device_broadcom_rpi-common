@@ -32,5 +32,5 @@ preparerpibootimg: ramdisk
 creatbootimg: preparerpibootimg
 	$(call pretty,"Target boot image: $(PRODUCT_OUT)/boot.img")
 	@dd if=/dev/zero of=$(PRODUCT_OUT)/boot.img bs=1M count=128
-	@mkfs.vfat $(PRODUCT_OUT)/boot.img -F 32 -n "bootimg"
+	@mkfs.fat $(PRODUCT_OUT)/boot.img -F 32 -n "bootimg"
 	@mcopy -s -i $(PRODUCT_OUT)/boot.img $(PRODUCT_OUT)/boot/* -spQm ::/
