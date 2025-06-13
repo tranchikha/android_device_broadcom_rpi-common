@@ -69,3 +69,6 @@ include device/broadcom/rpi-common/wifi.mk
 # codec
 # Initial support: software level
 include device/broadcom/rpi-common/codec.mk
+
+# GMS
+include vendor/partner_gms/products/gms.mk
