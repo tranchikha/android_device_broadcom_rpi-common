@@ -33,11 +33,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     vulkan.broadcom
 
-# Allocator/Mapper 4.0 from external/minigbm
+# Graphics
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf \
-    android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
-    gralloc.minigbm_dmabuf
+    android.hardware.graphics.allocator-service.minigbm_gbm_mesa \
+    mapper.minigbm_gbm_mesa
+
+PRODUCT_PACKAGES += \
+    dri_gbm \
+    libgbm_mesa
 
 # hwcomposer3 - display HAL
 PRODUCT_PACKAGES += \
