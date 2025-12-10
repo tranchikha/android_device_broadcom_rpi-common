@@ -30,6 +30,10 @@ endif
 # Update when updating to newer Android
 PRODUCT_SHIPPING_API_LEVEL := 34
 
+# Support Dynamic partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+PRODUCT_BUILD_SUPER_PARTITION := true
+
 # Dalvik heap configuration for board which has 4GB RAM or higher
 $(call inherit-product, frameworks/native/build/phone-xhdpi-4096-dalvik-heap.mk)
 

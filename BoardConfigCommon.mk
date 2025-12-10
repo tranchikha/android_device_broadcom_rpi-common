@@ -35,10 +35,18 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 # Partitions size - TODO: support dynamic partition
 BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728	# 128M
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648	# 2GB
-BOARD_VENDORIMAGE_PARTITION_SIZE := 268435456	# 256M
 # TODO: Adjust userdata partition size
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 134217728	# 128M
+
+BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
+BOARD_SUPER_PARTITION_SIZE := 6442450944 # 6GB
+BOARD_SUPER_PARTITION_GROUPS := krpi_partitions
+# Size of BOARD_KRPI_PARTITIONS_SIZE must less than BOARD_SUPER_PARTITION_SIZE / 2
+BOARD_KRPI_PARTITIONS_SIZE := 3204448256 # 3GB - 16MB = 3056MB. Reserve 16MB for metadata
+BOARD_KRPI_PARTITIONS_PARTITION_LIST := system vendor
+
+# ext4 images can be further compressed by enabling block- level deduplication
+BOARD_EXT4_SHARE_DUP_BLOCKS := true
 
 # We don't support fastboot flashing now.
 # So sparse image is not needed now.
@@ -63,6 +71,7 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += androidboot.serialno=RAndroid
 BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/etc/firmware
 BOARD_KERNEL_CMDLINE += loglevel=0
+BOARD_KERNEL_CMDLINE += androidboot.boot_devices=emmc2bus/fe340000.mmc
 
 # Vendor Interface Manifest
 DEVICE_MANIFEST_FILE                        := device/broadcom/rpi-common/manifest/manifest.xml

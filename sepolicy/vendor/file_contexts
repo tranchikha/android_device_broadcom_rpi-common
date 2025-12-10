@@ -1,9 +1,12 @@
 # Block devices
 /dev/block/mmcblk[0-2]+p[0-9]                                                           u:object_r:sdcard_block_device:s0
-/dev/block/mmcblk0p1                                                                    u:object_r:boot_block_device:s0
-/dev/block/mmcblk0p2                                                                    u:object_r:system_block_device:s0
-/dev/block/mmcblk0p3                                                                    u:object_r:system_block_device:s0
-/dev/block/mmcblk0p4                                                                    u:object_r:userdata_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/super                          u:object_r:super_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/system                         u:object_r:system_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/vendor                         u:object_r:system_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/userdata                       u:object_r:userdata_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/misc                           u:object_r:misc_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/boot(_[ab])?                   u:object_r:boot_block_device:s0
+/dev/block/platform/soc@0/emmc2bus/fe340000\.mmc/by-name/dtbo(_[ab])?                   u:object_r:dtbo_block_device:s0
 
 # DRM
 /vendor/bin/hw/android\.hardware\.drm-service\.clearkey                                 u:object_r:hal_drm_clearkey_exec:s0
