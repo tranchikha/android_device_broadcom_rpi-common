@@ -29,8 +29,19 @@ on early-init
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "performance"
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "performance"
 
+# We need vold early for metadata encryption
+on early-fs
+    start vold
+
 on fs
-    mount_all /vendor/etc/fstab.${ro.hardware}
+    mount_all /vendor/etc/fstab.${ro.hardware} --early
+
+on late-fs
+    # Wait for Keymaster
+    exec_start wait_for_keymaster
+
+    # Mount RW partitions which need run fsck
+    mount_all /vendor/etc/fstab.${ro.hardware} --late
 
 on post-fs-data
     # Create the directories used by the Wireless subsystem

@@ -62,3 +62,8 @@ debug.sf.nobootanimation=1
 
 # Force enabling NavigationBar
 qemu.hw.mainkeys=0
+
+# For metadata support
+ro.crypto.volume.metadata.method=dm-default-key
+ro.crypto.dm_default_key.options_format.version=2
+ro.crypto.volume.options=::v2
