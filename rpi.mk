@@ -19,7 +19,9 @@ include $(all-subdir-makefiles)
 PRODUCT_COPY_FILES += \
     device/broadcom/rpi-common/fstab.zram:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.zram.$(TARGET_PRODUCT) \
     device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.$(TARGET_PRODUCT) \
-    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RAMDISK)/fstab.$(TARGET_PRODUCT)
+    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RAMDISK)/fstab.$(TARGET_PRODUCT) \
+    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/fstab.$(TARGET_PRODUCT) \
+    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RECOVERY)/root/first_stage_ramdisk/fstab.$(TARGET_PRODUCT)
 
 # Add common init rc file
 # TODO: Support USB init rc file
@@ -49,7 +51,8 @@ PRODUCT_COPY_FILES += \
 
 # Kernel
 PRODUCT_COPY_FILES += \
-    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/Image:$(PRODUCT_OUT)/kernel
+    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/Image:$(PRODUCT_OUT)/kernel \
+    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img:$(PRODUCT_OUT)/dtb_prebuilt.img
 
 # Custom PHONY to create boot.img
 include device/broadcom/rpi-common/preparebootimg.mk
@@ -71,4 +74,6 @@ include device/broadcom/rpi-common/wifi.mk
 include device/broadcom/rpi-common/codec.mk
 
 # GMS
-include vendor/partner_gms/products/gms.mk
+#include vendor/partner_gms/products/gms.mk
+
+include device/broadcom/rpi-common/dtb.mk

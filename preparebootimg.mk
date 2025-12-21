@@ -18,6 +18,9 @@ VENDOR_PATH := vendor/broadcom/proprietary
 
 .PHONY: preparerpibootimg
 .PHONY: creatbootimg
+.PHONY: createbootloaderimg
+
+VENDOR_UBOOT_PATH := external/u-boot/u-boot.bin
 
 preparerpibootimg: ramdisk
 	@echo "Preparing data for boot image"
@@ -27,10 +30,23 @@ preparerpibootimg: ramdisk
 	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/overlays/* $(PRODUCT_OUT)/boot/overlays
 	@cp $(PRODUCT_OUT)/ramdisk.img $(PRODUCT_OUT)/boot
 	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)/boot/* $(PRODUCT_OUT)/boot
-	@echo $(BOARD_KERNEL_CMDLINE) > $(PRODUCT_OUT)/boot/cmdline.txt
+	@cp $(VENDOR_UBOOT_PATH) $(PRODUCT_OUT)/boot
+	@echo $(BOARD_BOOTCONFIG) > $(PRODUCT_OUT)/boot/cmdline.txt
 
-creatbootimg: preparerpibootimg
-	$(call pretty,"Target boot image: $(PRODUCT_OUT)/boot.img")
-	@dd if=/dev/zero of=$(PRODUCT_OUT)/boot.img bs=1M count=128
-	@mkfs.fat $(PRODUCT_OUT)/boot.img -F 32 -n "bootimg"
-	@mcopy -s -i $(PRODUCT_OUT)/boot.img $(PRODUCT_OUT)/boot/* -spQm ::/
+#creatbootimg: preparerpibootimg
+#	$(call pretty,"Target boot image: $(PRODUCT_OUT)/boot.img")
+#	@dd if=/dev/zero of=$(PRODUCT_OUT)/boot.img bs=1M count=128
+#	@mkfs.fat $(PRODUCT_OUT)/boot.img -F 32 -n "bootimg"
+#	@mcopy -s -i $(PRODUCT_OUT)/boot.img $(PRODUCT_OUT)/boot/* -spQm ::/
+
+createbootloaderimg: preparerpibootimg
+	$(call pretty,"Target bootloader image: $(PRODUCT_OUT)/bootloader-sd.img")
+	@dd if=/dev/zero of=$(PRODUCT_OUT)/bootloader-sd.img bs=1M count=64
+	@mkfs.fat $(PRODUCT_OUT)/bootloader-sd.img -F 32 -n "bootloader"
+	@mcopy -s -i $(PRODUCT_OUT)/bootloader-sd.img $(PRODUCT_OUT)/boot/* -spQm ::/
+
+#bootloader-sd.img: preparerpibootimg
+#	@dd if=/dev/null of=$@ bs=1 count=1 seek=$$(( 128 * 1024 * 1024 - 256 * 512 ))
+#	@mkfs.fat $@ -F 32 -n bootloader
+#	@mcopy -i $@ $(VENDOR_UBOOT_PATH) ::
+#	@mcopy -s -i $(PRODUCT_OUT)/bootloader-sd.img $(PRODUCT_OUT)/boot/* -spQm ::/

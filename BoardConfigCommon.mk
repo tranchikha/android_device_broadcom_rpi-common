@@ -18,6 +18,14 @@ TARGET_NO_BOOTLOADER := true
 # Use prebuilt kernel Image.gz and *.dtb
 # TODO: Runtime build kernel support
 TARGET_NO_RECOVERY := true
+TARGET_NO_KERNEL := false
+
+# For boot/vendor_boot. No init_boot support yet
+BOARD_USES_RECOVERY_AS_BOOT :=
+#BOARD_USES_GENERIC_KERNEL_IMAGE := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
+BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 
 # TODO: prepare bluetooth firmware
 BOARD_HAVE_BLUETOOTH := true
@@ -34,8 +42,39 @@ BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_USES_METADATA_PARTITION := true
 
+# AVB
+BOARD_AVB_ENABLE := true
+BOARD_AVB_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+
+#BOARD_AVB_SYSTEM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
+#BOARD_AVB_VENDOR_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
+#Workaround for below:
+#verity_utils.BuildVerityImageError: Failed to add AVB footer: /data3/01_Android16/out/host/linux-x86/bin/avbtool: Adding hashtree_footer failed: unpack r
+#equires a buffer of 60 bytes.
+
+
+## Enable chained vbmeta for boot images
+#BOARD_AVB_BOOT_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+#BOARD_AVB_BOOT_ALGORITHM := SHA256_RSA4096
+#BOARD_AVB_BOOT_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+#BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION := 2
+#
+## Enable chained vbmeta for init_boot images
+#BOARD_AVB_INIT_BOOT_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+#BOARD_AVB_INIT_BOOT_ALGORITHM := SHA256_RSA4096
+#BOARD_AVB_INIT_BOOT_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+#BOARD_AVB_INIT_BOOT_ROLLBACK_INDEX_LOCATION := 3
+
 # Partitions size - TODO: support dynamic partition
-BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728	# 128M
+BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864	# 64M
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864	# 64M
+# init_boot partition size is recommended to be 8MB, it can be larger.
+# When this variable is set, init_boot.img will be built with the generic
+# ramdisk, and that ramdisk will no longer be included in boot.img.
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
+BOARD_DTBOIMG_PARTITION_SIZE := 8388608 # 8M
 # TODO: Adjust userdata partition size
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 134217728	# 128M
 
@@ -51,7 +90,7 @@ BOARD_EXT4_SHARE_DUP_BLOCKS := true
 
 # We don't support fastboot flashing now.
 # So sparse image is not needed now.
-TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
+#TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
 
 ######## End of Parititions support ########
 
@@ -65,14 +104,38 @@ BOARD_VNDK_VERSION                     := current
 ######## End of Project Treble support ########
 
 # Kernel command line for booting. It will be appended to cmdline.txt
-BOARD_KERNEL_CMDLINE += console=ttyS0,115200 root=/dev/ram0 rootwait
+BOARD_KERNEL_CMDLINE += bootconfig
+BOARD_BOOTCONFIG += console=ttyS0,115200 root=/dev/ram0 rootwait
 # Use for loading fstab (fstab.${ro.boot.hardware}) and load *.so HALs and other similar purposes
-BOARD_KERNEL_CMDLINE += androidboot.hardware=$(TARGET_PRODUCT)
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
-BOARD_KERNEL_CMDLINE += androidboot.serialno=RAndroid
-BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/etc/firmware
-BOARD_KERNEL_CMDLINE += loglevel=0
-BOARD_KERNEL_CMDLINE += androidboot.boot_devices=emmc2bus/fe340000.mmc
+BOARD_BOOTCONFIG += androidboot.hardware=$(TARGET_PRODUCT)
+BOARD_BOOTCONFIG += androidboot.selinux=permissive
+BOARD_BOOTCONFIG += androidboot.serialno=RAndroid
+BOARD_BOOTCONFIG += firmware_class.path=/vendor/etc/firmware
+BOARD_BOOTCONFIG += loglevel=0
+BOARD_BOOTCONFIG += androidboot.boot_devices=emmc2bus/fe340000.mmc
+
+# Kernel support
+#BOARD_INCLUDE_RECOVERY_DTBO := true
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+# By default (when TARGET_NO_KERNEL is false), kernel binary was taken from $(PRODUCT_OUT)/kernel.
+# So we don't need to set BOARD_KERNEL_BINARIES if we use the name 'kernel' for prebuil kernel image
+#BOARD_KERNEL_BINARIES := kernel
+#BOARD_PREBUILT_BOOTIMAGE := path/boot.img
+#BOARD_PREBUILT_DTBIMAGE_DIR := vendor/broadcom/proprietary/rpi4-kernel-prebuilt
+BOARD_PREBUILT_DTBOIMAGE := vendor/broadcom/proprietary/rpi4-kernel-prebuilt/overlays/dtbo_prebuilt.img
+BOARD_BOOT_HEADER_VERSION := 4
+BOARD_KERNEL_BASE     := 0x00000000
+BOARD_KERNEL_PAGESIZE := 4096
+#BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdisk_offset 0x3300000
+BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --ramdisk_offset 0x3300000
+BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x3000000 --dtb $(PRODUCT_OUT)/dtb.img
+#BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x1FA00000 --dtb vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img
+BOARD_MKBOOTIMG_ARGS  += --header_version $(BOARD_BOOT_HEADER_VERSION)
+
+BOARD_INIT_BOOT_HEADER_VERSION := 4
+BOARD_MKBOOTIMG_INIT_ARGS += --header_version $(BOARD_INIT_BOOT_HEADER_VERSION)
+
+#BOARD_RAMDISK_USE_LZ4 := true
 
 # Vendor Interface Manifest
 DEVICE_MANIFEST_FILE                        := device/broadcom/rpi-common/manifest/manifest.xml
