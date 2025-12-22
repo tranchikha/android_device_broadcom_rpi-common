@@ -20,8 +20,13 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/mainline_system.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_minimal.mk)
 
-# Update when configuring for Android TV, Automotive
-PRODUCT_CHARACTERISTICS := tablet,nosdcard
+ifeq ($(findstring atv, $(TARGET_PRODUCT)),atv)
+$(call inherit-product, device/broadcom/rpi-common/atv.mk)
+endif
+ifeq ($(findstring atablet, $(TARGET_PRODUCT)),atablet)
+$(call inherit-product, device/broadcom/rpi-common/atablet.mk)
+endif
+
 # Update when updating to newer Android
 PRODUCT_SHIPPING_API_LEVEL := 34
 
@@ -38,7 +43,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
 # Required apps to use for booting
 PRODUCT_PACKAGES += \
-    Launcher3QuickStep \
     Settings \
     StorageManager \
     SystemUI \
