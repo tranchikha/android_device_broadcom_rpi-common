@@ -51,7 +51,7 @@
 
 # Temp
 /vendor/bin/hw/android.hardware.usb-service.example                                     u:object_r:hal_usb_default_exec:s0
-/vendor/bin/hw/android.hardware.usb.gadget@1.2-rpi                                      u:object_r:hal_usb_gadget_default_exec:s0
+/vendor/bin/hw/android.hardware.usb.gadget-service.rpi                                  u:object_r:hal_usb_gadget_default_exec:s0
 /vendor/bin/hw/android.hardware.bluetooth@1.1-service.btlinux                           u:object_r:hal_bluetooth_default_exec:s0
 
 # Audio

@@ -17,4 +17,4 @@
 # USB
 PRODUCT_PACKAGES += \
     android.hardware.usb-service.example \
-    android.hardware.usb.gadget@1.2-rpi
+    android.hardware.usb.gadget-service.rpi
