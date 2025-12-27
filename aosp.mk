@@ -41,6 +41,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 # https://source.android.com/docs/core/storage/sdcardfs-deprecate#configuring-sdcard-replacement-functionality
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
+# Disable Apex compression to reduce boot time for first boot
+OVERRIDE_PRODUCT_COMPRESSED_APEX := false
+
 # Required apps to use for booting
 PRODUCT_PACKAGES += \
     Settings \
