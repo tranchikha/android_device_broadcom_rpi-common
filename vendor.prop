@@ -11,6 +11,8 @@ ro.hardware.vulkan=broadcom
 # hwc3
 ro.vendor.hwcomposer.display_finder_mode=drm
 ro.vendor.hwcomposer.mode=client
+# Disable non blocking to improve performance for single display
+persist.vendor.hwc.disable_nonblocking=true
 
 # camera
 config.disable_cameraservice=true
