@@ -28,6 +28,8 @@ on early-init
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "performance"
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "performance"
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "performance"
+    # If persist.graphics.hardwareegl is not set, use 'mesa' as default
+    setprop ro.hardware.egl ${persist.graphics.hardwareegl:-mesa}
 
 on fs
     mount_all /vendor/etc/fstab.${ro.hardware}
