@@ -17,4 +17,10 @@
 # Fix the issue
 # MediaProfiles: frameworks/av/media/libmedia/MediaProfiles.cpp:1217 CHECK((fp = fopen(xml, "r"))) failed.
 PRODUCT_COPY_FILES += \
-    device/broadcom/rpi-common/media/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml
+    device/broadcom/rpi-common/media/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
+    vendor/broadcom/hal/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
+
+PRODUCT_PACKAGES += \
+    android.hardware.camera.provider-V1-external-impl_rpi \
+    android.hardware.camera.provider-V1-external-service-rpi \
+    camera.device-external-impl_rpi

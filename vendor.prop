@@ -15,7 +15,7 @@ ro.vendor.hwcomposer.mode=client
 persist.vendor.hwc.disable_nonblocking=true
 
 # camera
-config.disable_cameraservice=true
+config.disable_cameraservice=false
 media.settings.xml=/vendor/etc/media_profiles_V1_0.xml
 
 # Audio
