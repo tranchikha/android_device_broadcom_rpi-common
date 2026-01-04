@@ -49,10 +49,10 @@ include device/broadcom/rpi-common/camera.mk
 PRODUCT_COPY_FILES += \
     device/broadcom/rpi-common/Generic.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/Generic.kl
 
-# Kernel
-PRODUCT_COPY_FILES += \
-    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/Image:$(PRODUCT_OUT)/kernel \
-    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img:$(PRODUCT_OUT)/dtb_prebuilt.img
+## Kernel
+#PRODUCT_COPY_FILES += \
+#    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/Image:$(PRODUCT_OUT)/kernel \
+#    vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img:$(PRODUCT_OUT)/dtb_prebuilt.img
 
 # Custom PHONY to create boot.img
 include device/broadcom/rpi-common/preparebootimg.mk

@@ -15,3 +15,4 @@
 #
 
 include $(all-subdir-makefiles)
+include device/broadcom/rpi-common/kernel.mk

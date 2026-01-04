@@ -73,7 +73,7 @@ BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864	# 64M
 # init_boot partition size is recommended to be 8MB, it can be larger.
 # When this variable is set, init_boot.img will be built with the generic
 # ramdisk, and that ramdisk will no longer be included in boot.img.
-BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
+#BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608 # 8M
 # TODO: Adjust userdata partition size
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 134217728	# 128M
@@ -116,7 +116,9 @@ BOARD_BOOTCONFIG += androidboot.boot_devices=emmc2bus/fe340000.mmc
 
 # Kernel support
 #BOARD_INCLUDE_RECOVERY_DTBO := true
+BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+BOARD_PREBUILT_DTBIMAGE_DIR := device/broadcom/rpi-common
 # By default (when TARGET_NO_KERNEL is false), kernel binary was taken from $(PRODUCT_OUT)/kernel.
 # So we don't need to set BOARD_KERNEL_BINARIES if we use the name 'kernel' for prebuil kernel image
 #BOARD_KERNEL_BINARIES := kernel
@@ -126,14 +128,15 @@ BOARD_PREBUILT_DTBOIMAGE := vendor/broadcom/proprietary/rpi4-kernel-prebuilt/ove
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_KERNEL_BASE     := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
-#BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdisk_offset 0x3300000
-BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --ramdisk_offset 0x3300000
-BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x3000000 --dtb $(PRODUCT_OUT)/dtb.img
+BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdisk_offset 0x3300000
+#BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --ramdisk_offset 0x3300000
+#BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x3000000 --dtb $(PRODUCT_OUT)/dtb.img
 #BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x1FA00000 --dtb vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img
+BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x3000000
 BOARD_MKBOOTIMG_ARGS  += --header_version $(BOARD_BOOT_HEADER_VERSION)
 
-BOARD_INIT_BOOT_HEADER_VERSION := 4
-BOARD_MKBOOTIMG_INIT_ARGS += --header_version $(BOARD_INIT_BOOT_HEADER_VERSION)
+#BOARD_INIT_BOOT_HEADER_VERSION := 4
+#BOARD_MKBOOTIMG_INIT_ARGS += --header_version $(BOARD_INIT_BOOT_HEADER_VERSION)
 
 #BOARD_RAMDISK_USE_LZ4 := true
 

@@ -20,16 +20,16 @@ VENDOR_PATH := vendor/broadcom/proprietary
 .PHONY: creatbootimg
 .PHONY: createbootloaderimg
 
-VENDOR_UBOOT_PATH := external/u-boot/u-boot.bin
+VENDOR_UBOOT_PATH := device/broadcom/u-boot/u-boot.bin
 
 preparerpibootimg: ramdisk
 	@echo "Preparing data for boot image"
 	@mkdir -p $(PRODUCT_OUT)/boot/overlays
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/Image $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/*.dtb $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/overlays/* $(PRODUCT_OUT)/boot/overlays
+	@cp $(VENDOR_PATH)/rpi4-kernel-prebuilt/Image $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/rpi4-kernel-prebuilt/*.dtb $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/rpi4-kernel-prebuilt/overlays/* $(PRODUCT_OUT)/boot/overlays
 	@cp $(PRODUCT_OUT)/ramdisk.img $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)/boot/* $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/rpi4/boot/* $(PRODUCT_OUT)/boot
 	@cp $(VENDOR_UBOOT_PATH) $(PRODUCT_OUT)/boot
 	@echo $(BOARD_BOOTCONFIG) > $(PRODUCT_OUT)/boot/cmdline.txt
 
