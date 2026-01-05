@@ -104,15 +104,18 @@ BOARD_VNDK_VERSION                     := current
 ######## End of Project Treble support ########
 
 # Kernel command line for booting. It will be appended to cmdline.txt
-BOARD_KERNEL_CMDLINE += bootconfig
-BOARD_BOOTCONFIG += console=ttyS0,115200 root=/dev/ram0 rootwait
+#BOARD_KERNEL_CMDLINE += bootconfig
+#BOARD_KERNEL_CMDLINE += console=ttyS0,115200 root=/dev/ram0 rootwait
 # Use for loading fstab (fstab.${ro.boot.hardware}) and load *.so HALs and other similar purposes
-BOARD_BOOTCONFIG += androidboot.hardware=$(TARGET_PRODUCT)
-BOARD_BOOTCONFIG += androidboot.selinux=permissive
-BOARD_BOOTCONFIG += androidboot.serialno=RAndroid
-BOARD_BOOTCONFIG += firmware_class.path=/vendor/etc/firmware
-BOARD_BOOTCONFIG += loglevel=0
-BOARD_BOOTCONFIG += androidboot.boot_devices=emmc2bus/fe340000.mmc
+BOARD_KERNEL_CMDLINE += androidboot.hardware=$(TARGET_PRODUCT)
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE += androidboot.serialno=RAndroid
+BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/etc/firmware
+#BOARD_KERNEL_CMDLINE += loglevel=0
+BOARD_KERNEL_CMDLINE += androidboot.boot_devices=emmc2bus/fe340000.mmc
+BOARD_KERNEL_CMDLINE += earlycon
+BOARD_KERNEL_CMDLINE += coherent_pool=1M 8250.nr_uarts=1 snd_bcm2835.enable_compat_alsa=0 snd_bcm2835.enable_hdmi=1 snd_bcm2835.enable_headphones=1 \
+                        vc_mem.mem_base=0x3ec00000 vc_mem.mem_size=0x40000000 console=ttyS0,115200
 
 # Kernel support
 #BOARD_INCLUDE_RECOVERY_DTBO := true
@@ -124,7 +127,7 @@ BOARD_PREBUILT_DTBIMAGE_DIR := device/broadcom/rpi-common
 #BOARD_KERNEL_BINARIES := kernel
 #BOARD_PREBUILT_BOOTIMAGE := path/boot.img
 #BOARD_PREBUILT_DTBIMAGE_DIR := vendor/broadcom/proprietary/rpi4-kernel-prebuilt
-BOARD_PREBUILT_DTBOIMAGE := vendor/broadcom/proprietary/rpi4-kernel-prebuilt/overlays/dtbo_prebuilt.img
+#BOARD_PREBUILT_DTBOIMAGE := vendor/broadcom/proprietary/rpi4-kernel-prebuilt/overlays/dtbo_prebuilt.img
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_KERNEL_BASE     := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
@@ -134,6 +137,7 @@ BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdis
 #BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x1FA00000 --dtb vendor/broadcom/proprietary/rpi4-kernel-prebuilt/dtb_prebuilt.img
 BOARD_MKBOOTIMG_ARGS  += --dtb_offset 0x3000000
 BOARD_MKBOOTIMG_ARGS  += --header_version $(BOARD_BOOT_HEADER_VERSION)
+TARGET_RECOVERY_FSTAB := device/broadcom/rpi-common/fstab
 
 #BOARD_INIT_BOOT_HEADER_VERSION := 4
 #BOARD_MKBOOTIMG_INIT_ARGS += --header_version $(BOARD_INIT_BOOT_HEADER_VERSION)

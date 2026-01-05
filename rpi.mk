@@ -16,12 +16,15 @@
 
 include $(all-subdir-makefiles)
 
+$(warning "TARGET_VENDOR_RAMDISK_OUT is $(TARGET_VENDOR_RAMDISK_OUT)")
+$(warning "TARGET_COPY_OUT_RECOVERY is $(TARGET_COPY_OUT_RECOVERY)")
+$(warning "TARGET_COPY_OUT_RAMDISK is $(TARGET_COPY_OUT_RAMDISK)")
+$(warning "TARGET_COPY_OUT_VENDOR_RAMDISK is $(TARGET_COPY_OUT_VENDOR_RAMDISK)")
 PRODUCT_COPY_FILES += \
     device/broadcom/rpi-common/fstab.zram:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.zram.$(TARGET_PRODUCT) \
     device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.$(TARGET_PRODUCT) \
-    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RAMDISK)/fstab.$(TARGET_PRODUCT) \
-    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/fstab.$(TARGET_PRODUCT) \
-    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RECOVERY)/root/first_stage_ramdisk/fstab.$(TARGET_PRODUCT)
+    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_RAMDISK)/first_stage_ramdisk/fstab.$(TARGET_PRODUCT) \
+    device/broadcom/rpi-common/fstab:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.$(TARGET_PRODUCT)
 
 # Add common init rc file
 # TODO: Support USB init rc file
