@@ -28,10 +28,10 @@ $(call inherit-product, device/broadcom/rpi-common/atablet.mk)
 endif
 
 # Update when updating to newer Android
-PRODUCT_SHIPPING_API_LEVEL := 34
+PRODUCT_SHIPPING_API_LEVEL := 29
 
 # Dalvik heap configuration for board which has 4GB RAM or higher
-$(call inherit-product, frameworks/native/build/phone-xhdpi-4096-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
 # Configure system to support APEX updates
 # https://source.android.com/docs/core/ota/apex#configuring-system-support-updates
@@ -39,7 +39,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
 # Emulated Storage
 # https://source.android.com/docs/core/storage/sdcardfs-deprecate#configuring-sdcard-replacement-functionality
-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+#$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
 # Disable Apex compression to reduce boot time for first boot
 OVERRIDE_PRODUCT_COMPRESSED_APEX := false

@@ -1,0 +1,252 @@
+diff --git a/aosp.mk b/aosp.mk
+index 7025ec0..18ffd58 100644
+--- a/aosp.mk
++++ b/aosp.mk
+@@ -28,10 +28,10 @@ $(call inherit-product, device/broadcom/rpi-common/atablet.mk)
+ endif
+ 
+ # Update when updating to newer Android
+-PRODUCT_SHIPPING_API_LEVEL := 34
++PRODUCT_SHIPPING_API_LEVEL := 29
+ 
+ # Dalvik heap configuration for board which has 4GB RAM or higher
+-$(call inherit-product, frameworks/native/build/phone-xhdpi-4096-dalvik-heap.mk)
++$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
+ 
+ # Configure system to support APEX updates
+ # https://source.android.com/docs/core/ota/apex#configuring-system-support-updates
+@@ -39,7 +39,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+ 
+ # Emulated Storage
+ # https://source.android.com/docs/core/storage/sdcardfs-deprecate#configuring-sdcard-replacement-functionality
+-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
++#$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+ 
+ # Disable Apex compression to reduce boot time for first boot
+ OVERRIDE_PRODUCT_COMPRESSED_APEX := false
+diff --git a/audio.mk b/audio.mk
+index 1831e3c..fac58c7 100644
+--- a/audio.mk
++++ b/audio.mk
+@@ -15,7 +15,9 @@
+ #
+ 
+ PRODUCT_SOONG_NAMESPACES += device/generic/goldfish
+-PRODUCT_SOONG_NAMESPACES += vendor/broadcom/hal/audio
++#PRODUCT_SOONG_NAMESPACES += vendor/broadcom/hal/audio
++
++USE_XML_AUDIO_POLICY_CONF ?= 1
+ 
+ # Audio Tinyalsa tools
+ PRODUCT_PACKAGES += \
+@@ -32,18 +34,43 @@ PRODUCT_PACKAGES += \
+     alsa_arecord \
+     alsa_loop
+ 
+-# Audio HAL
++# for HIDL related packages
+ PRODUCT_PACKAGES += \
+-    android.hardware.audio.service \
+-    android.hardware.audio@7.1-impl.rpi \
+-    android.hardware.audio.effect@7.0-impl
++    android.hardware.audio@2.0-service \
++    android.hardware.audio@2.0-impl \
++    android.hardware.audio.effect@2.0-impl \
++    android.hardware.soundtrigger@2.1-impl \
++    android.hardware.audio@4.0 \
++    android.hardware.audio.common@4.0 \
++    android.hardware.audio.common@4.0-util \
++    android.hardware.audio@4.0-impl \
++    android.hardware.audio.effect@4.0 \
++    android.hardware.audio.effect@4.0-impl \
++    vendor.qti.hardware.audiohalext@1.0 \
++    vendor.qti.hardware.audiohalext@1.0-impl \
++    vendor.qti.hardware.audiohalext-utils
+ 
++# enable audio hidl hal 5.0
+ PRODUCT_PACKAGES += \
+-    android.hardware.bluetooth.audio-impl \
+-    audio.bluetooth.default
++    android.hardware.audio@5.0 \
++    android.hardware.audio.common@5.0 \
++    android.hardware.audio.common@5.0-util \
++    android.hardware.audio@5.0-impl \
++    android.hardware.audio.effect@5.0 \
++    android.hardware.audio.effect@5.0-impl
+ 
+-# Audio policy configuration
+-PRODUCT_COPY_FILES += \
++## Audio HAL
++#PRODUCT_PACKAGES += \
++#    android.hardware.audio.service \
++#    android.hardware.audio@7.1-impl.rpi \
++#    android.hardware.audio.effect@7.0-impl
++#
++#PRODUCT_PACKAGES += \
++#    android.hardware.bluetooth.audio-impl \
++#    audio.bluetooth.default
++#
++## Audio policy configuration
++#PRODUCT_COPY_FILES += \
+     device/generic/goldfish/hals/audio/policy/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
+     device/generic/goldfish/hals/audio/policy/primary_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/primary_audio_policy_configuration.xml \
+     frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration_7_0.xml \
+diff --git a/graphics_display.mk b/graphics_display.mk
+index be35534..42378e8 100644
+--- a/graphics_display.mk
++++ b/graphics_display.mk
+@@ -14,9 +14,11 @@
+ #  limitations under the License.
+ #
+ 
++USING_GBM_GRALLOC ?= true
+ # Mesa graphics configuration from external/mesa3d
+ BOARD_MESA3D_USES_MESON_BUILD := true
+ BOARD_MESA3D_GALLIUM_DRIVERS := vc4 v3d
++BOARD_GPU_DRIVERS := vc4
+ BOARD_MESA3D_BUILD_LIBGBM := true
+ BOARD_MESA3D_VULKAN_DRIVERS := broadcom
+ # Enable Vulkan backend for SKIA/HWUI
+@@ -29,6 +31,17 @@ PRODUCT_PACKAGES += \
+     libgallium_dri \
+     libglapi
+ 
++ifeq ($(USING_GBM_GRALLOC), true)
++
++PRODUCT_SOONG_NAMESPACES += external/mesa3d
++
++PRODUCT_PACKAGES += \
++    gralloc.gbm \
++    android.hardware.graphics.allocator@2.0-impl \
++    android.hardware.graphics.allocator@2.0-service \
++    android.hardware.graphics.mapper@2.0-impl-2.1
++
++else
+ # Vulkan
+ PRODUCT_PACKAGES += \
+     vulkan.broadcom
+@@ -38,11 +51,18 @@ PRODUCT_PACKAGES += \
+     android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf \
+     android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
+     gralloc.minigbm_dmabuf
++endif
+ 
+ PRODUCT_PACKAGES += \
+     dri_gbm \
+     libgbm_mesa
+ 
++ifeq ($(USING_GBM_GRALLOC), true)
++PRODUCT_PACKAGES += \
++    android.hardware.graphics.composer@2.3-service \
++    hwcomposer.drm
++else
+ # hwcomposer3 - display HAL
+ PRODUCT_PACKAGES += \
+     android.hardware.composer.hwc3-service.drm
++endif
+diff --git a/manifest/manifest.xml b/manifest/manifest.xml
+index 9a013af..2b2fb5f 100644
+--- a/manifest/manifest.xml
++++ b/manifest/manifest.xml
+@@ -1,8 +1,15 @@
+-<manifest version="1.0" type="device" target-level="8">
+-    <hal format="hidl">
++<manifest version="1.0" type="device" target-level="4">
++    <hal format="hidl" optional="false">
++        <name>android.hardware.audio</name>
++        <version>5.0</version>
++        <interface>
++            <name>IDevicesFactory</name>
++            <instance>default</instance>
++        </interface>
++    </hal>
++    <hal format="hidl" optional="false">
+         <name>android.hardware.audio.effect</name>
+-        <transport>hwbinder</transport>
+-        <version>7.0</version>
++        <version>5.0</version>
+         <interface>
+             <name>IEffectsFactory</name>
+             <instance>default</instance>
+diff --git a/rpi.mk b/rpi.mk
+index d5146dc..7a46cdf 100644
+--- a/rpi.mk
++++ b/rpi.mk
+@@ -68,7 +68,7 @@ include device/broadcom/rpi-common/wifi.mk
+ 
+ # codec
+ # Initial support: software level
+-include device/broadcom/rpi-common/codec.mk
++#include device/broadcom/rpi-common/codec.mk
+ 
+ # GMS
+-include vendor/partner_gms/products/gms.mk
++#include vendor/partner_gms/products/gms.mk
+diff --git a/sepolicy/vendor/file_contexts b/sepolicy/vendor/file_contexts
+index a2efb06..08f503e 100644
+--- a/sepolicy/vendor/file_contexts
++++ b/sepolicy/vendor/file_contexts
+@@ -31,23 +31,28 @@
+ /vendor/lib(64)?/egl/libEGL_mesa.so                                                     u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/egl/libGLESv1_CM_mesa.so                                               u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/egl/libGLESv2_mesa.so                                                  u:object_r:same_process_hal_file:s0
+-/vendor/lib(64)?/gralloc.minigbm_dmabuf.so                                              u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/gralloc.gbm.so                                                         u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/libgbm.so                                                              u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/libgbm_mesa.so                                                         u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/dri/libgallium_dri.so                                                  u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/libglapi.so                                                            u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/libminigbm_gralloc_gbm_mesa.so                                         u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/libdrm.so                                                              u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/hw/vulkan.broadcom.so                                                  u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/hw/android.hardware.graphics.mapper@2.0-impl-2.1.so                    u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/hw/gralloc.gbm.so                                                      u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/hw/android.hardware.graphics.allocator@2.0-impl                        u:object_r:same_process_hal_file:s0
+ /vendor/bin/hw/android\.hardware\.graphics\.allocator-service\.minigbm_gbm_mesa         u:object_r:hal_graphics_allocator_default_exec:s0
+ /vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf.so            u:object_r:same_process_hal_file:s0
+ /vendor/bin/hw/android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf           u:object_r:hal_graphics_allocator_default_exec:s0
++/vendor/bin/hw/android.hardware.graphics.allocator@2.0-service                          u:object_r:hal_graphics_allocator_default_exec:s0
+ # vc4 rendering node
+ /dev/dri/card1                                                                          u:object_r:gpu_device:s0
+ # Mesa graphics rendering node
+ /dev/dri/renderD128                                                                     u:object_r:gpu_device:s0
+ 
+ # Display HAL - hwcomposer3
+-/vendor/bin/hw/android.hardware.composer.hwc3-service.drm                               u:object_r:hal_graphics_composer_default_exec:s0
++/vendor/bin/hw/android.hardware.graphics.composer@2.3-service                           u:object_r:hal_graphics_composer_default_exec:s0
+ /dev/dri/card0                                                                          u:object_r:gpu_device:s0
+ 
+ # Temp
+@@ -57,11 +62,15 @@
+ 
+ # Audio
+ /vendor/bin/hw/android.hardware.audio.service                                           u:object_r:hal_audio_default_exec:s0
++/vendor/bin/hw/android.hardware.audio@2.0-service                                           u:object_r:hal_audio_default_exec:s0
+ /vendor/lib(64)?/android.hardware.audio@7.1-impl.rpi.so                                 u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/android.hardware.audio.effect@7.0-impl.so                              u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/android.hardware.audio@5.0-impl.so                                 u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/android.hardware.audio.effect@5.0-impl.so                              u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/hw/audio.bluetooth.default.so                                          u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/hw/audio.r_submix.default.so                                           u:object_r:same_process_hal_file:s0
+ /vendor/lib(64)?/android.hardware.bluetooth.audio-impl.so                               u:object_r:same_process_hal_file:s0
++/vendor/lib(64)?/hwcomposer.drm.so                                                      u:object_r:same_process_hal_file:s0
+ 
+ # Wi-Fi
+ /vendor/bin/hw/android.hardware.wifi-service                                            u:object_r:hal_wifi_default_exec:s0
+diff --git a/vendor.prop b/vendor.prop
+index 48c2031..121970f 100644
+--- a/vendor.prop
++++ b/vendor.prop
+@@ -58,7 +58,11 @@ dalvik.vm.dex2oat-minidebuginfo=false
+ dalvik.vm.minidebuginfo=false
+ 
+ # Disable bootanimation
+-debug.sf.nobootanimation=1
++#debug.sf.nobootanimation=1
+ 
+ # Force enabling NavigationBar
+ qemu.hw.mainkeys=0
++
++# Android 10 Graphics
++ro.hardware.gralloc=gbm
++ro.hardware.hwcomposer=drm

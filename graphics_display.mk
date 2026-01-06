@@ -14,9 +14,11 @@
 #  limitations under the License.
 #
 
+USING_GBM_GRALLOC ?= true
 # Mesa graphics configuration from external/mesa3d
 BOARD_MESA3D_USES_MESON_BUILD := true
 BOARD_MESA3D_GALLIUM_DRIVERS := vc4 v3d
+BOARD_GPU_DRIVERS := vc4
 BOARD_MESA3D_BUILD_LIBGBM := true
 BOARD_MESA3D_VULKAN_DRIVERS := broadcom
 # Enable Vulkan backend for SKIA/HWUI
@@ -29,6 +31,17 @@ PRODUCT_PACKAGES += \
     libgallium_dri \
     libglapi
 
+ifeq ($(USING_GBM_GRALLOC), true)
+
+PRODUCT_SOONG_NAMESPACES += external/mesa3d
+
+PRODUCT_PACKAGES += \
+    gralloc.gbm \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.mapper@2.0-impl-2.1
+
+else
 # Vulkan
 PRODUCT_PACKAGES += \
     vulkan.broadcom
@@ -38,11 +51,18 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf \
     android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
     gralloc.minigbm_dmabuf
+endif
 
 PRODUCT_PACKAGES += \
     dri_gbm \
     libgbm_mesa
 
+ifeq ($(USING_GBM_GRALLOC), true)
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.composer@2.3-service \
+    hwcomposer.drm
+else
 # hwcomposer3 - display HAL
 PRODUCT_PACKAGES += \
     android.hardware.composer.hwc3-service.drm
+endif

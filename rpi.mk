@@ -41,7 +41,7 @@ include device/broadcom/rpi-common/permission.mk
 include device/broadcom/rpi-common/graphics_display.mk
 
 # Handle camera support
-include device/broadcom/rpi-common/camera.mk
+#include device/broadcom/rpi-common/camera.mk
 
 # Generic Keylayout
 PRODUCT_COPY_FILES += \
@@ -68,7 +68,7 @@ include device/broadcom/rpi-common/wifi.mk
 
 # codec
 # Initial support: software level
-include device/broadcom/rpi-common/codec.mk
+#include device/broadcom/rpi-common/codec.mk
 
 # GMS
-include vendor/partner_gms/products/gms.mk
+#include vendor/partner_gms/products/gms.mk

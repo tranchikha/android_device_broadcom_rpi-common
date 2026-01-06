@@ -15,7 +15,9 @@
 #
 
 PRODUCT_SOONG_NAMESPACES += device/generic/goldfish
-PRODUCT_SOONG_NAMESPACES += vendor/broadcom/hal/audio
+#PRODUCT_SOONG_NAMESPACES += vendor/broadcom/hal/audio
+
+USE_XML_AUDIO_POLICY_CONF ?= 1
 
 # Audio Tinyalsa tools
 PRODUCT_PACKAGES += \
@@ -32,18 +34,43 @@ PRODUCT_PACKAGES += \
     alsa_arecord \
     alsa_loop
 
-# Audio HAL
+# for HIDL related packages
 PRODUCT_PACKAGES += \
-    android.hardware.audio.service \
-    android.hardware.audio@7.1-impl.rpi \
-    android.hardware.audio.effect@7.0-impl
+    android.hardware.audio@2.0-service \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.soundtrigger@2.1-impl \
+    android.hardware.audio@4.0 \
+    android.hardware.audio.common@4.0 \
+    android.hardware.audio.common@4.0-util \
+    android.hardware.audio@4.0-impl \
+    android.hardware.audio.effect@4.0 \
+    android.hardware.audio.effect@4.0-impl \
+    vendor.qti.hardware.audiohalext@1.0 \
+    vendor.qti.hardware.audiohalext@1.0-impl \
+    vendor.qti.hardware.audiohalext-utils
 
+# enable audio hidl hal 5.0
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth.audio-impl \
-    audio.bluetooth.default
+    android.hardware.audio@5.0 \
+    android.hardware.audio.common@5.0 \
+    android.hardware.audio.common@5.0-util \
+    android.hardware.audio@5.0-impl \
+    android.hardware.audio.effect@5.0 \
+    android.hardware.audio.effect@5.0-impl
 
-# Audio policy configuration
-PRODUCT_COPY_FILES += \
+## Audio HAL
+#PRODUCT_PACKAGES += \
+#    android.hardware.audio.service \
+#    android.hardware.audio@7.1-impl.rpi \
+#    android.hardware.audio.effect@7.0-impl
+#
+#PRODUCT_PACKAGES += \
+#    android.hardware.bluetooth.audio-impl \
+#    audio.bluetooth.default
+#
+## Audio policy configuration
+#PRODUCT_COPY_FILES += \
     device/generic/goldfish/hals/audio/policy/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     device/generic/goldfish/hals/audio/policy/primary_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/primary_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration_7_0.xml \

@@ -58,7 +58,11 @@ dalvik.vm.dex2oat-minidebuginfo=false
 dalvik.vm.minidebuginfo=false
 
 # Disable bootanimation
-debug.sf.nobootanimation=1
+#debug.sf.nobootanimation=1
 
 # Force enabling NavigationBar
 qemu.hw.mainkeys=0
+
+# Android 10 Graphics
+ro.hardware.gralloc=gbm
+ro.hardware.hwcomposer=drm
