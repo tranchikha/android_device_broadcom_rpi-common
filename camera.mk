@@ -21,6 +21,6 @@ PRODUCT_COPY_FILES += \
     vendor/broadcom/hal/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
 
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider-V1-external-impl_rpi \
+    android.hardware.camera.provider-V1-external-impl-rpi \
     android.hardware.camera.provider-V1-external-service-rpi \
-    camera.device-external-impl_rpi
+    camera.device-external-impl-rpi
