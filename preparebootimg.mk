@@ -22,11 +22,11 @@ VENDOR_PATH := vendor/broadcom/proprietary
 preparerpibootimg: ramdisk
 	@echo "Preparing data for boot image"
 	@mkdir -p $(PRODUCT_OUT)/boot/overlays
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/Image $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/*.dtb $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)-kernel-prebuilt/overlays/* $(PRODUCT_OUT)/boot/overlays
+	@cp $(VENDOR_PATH)/$(BASE_PRODUCT)-kernel-prebuilt/Image $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/$(BASE_PRODUCT)-kernel-prebuilt/*.dtb $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/$(BASE_PRODUCT)-kernel-prebuilt/overlays/* $(PRODUCT_OUT)/boot/overlays
 	@cp $(PRODUCT_OUT)/ramdisk.img $(PRODUCT_OUT)/boot
-	@cp $(VENDOR_PATH)/$(TARGET_PRODUCT)/boot/* $(PRODUCT_OUT)/boot
+	@cp $(VENDOR_PATH)/$(BASE_PRODUCT)/boot/* $(PRODUCT_OUT)/boot
 	@echo $(BOARD_KERNEL_CMDLINE) > $(PRODUCT_OUT)/boot/cmdline.txt
 
 creatbootimg: preparerpibootimg
