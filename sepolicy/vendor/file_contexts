@@ -76,4 +76,4 @@
 # Camera
 /vendor/lib(64)?/android.hardware.camera.provider-V1-external-impl-rpi.so                   u:object_r:same_process_hal_file:s0
 /vendor/lib(64)?/camera.device-external-impl-rpi.so                                         u:object_r:same_process_hal_file:s0
-/vendor/bin/hw/hw/android.hardware.camera.provider-V1-external-service-rpi                  u:object_r:hal_camera_default_exec:s0
+/vendor/bin/hw/android.hardware.camera.provider-V1-external-service-rpi                  u:object_r:hal_camera_default_exec:s0
