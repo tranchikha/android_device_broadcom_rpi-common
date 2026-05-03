@@ -39,6 +39,19 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
     gralloc.minigbm_dmabuf
 
+USE_DRM_MAINLINE_HWC3 ?= false
+ifeq ($(USE_DRM_MAINLINE_HWC3), true)
 # hwcomposer3 - display HAL
 PRODUCT_PACKAGES += \
     android.hardware.composer.hwc3-service.drm
+else
+# TODO: Clone and make our own hwc3 HAL. Do NOT depend
+# on goldfish-opengl namespace and marcos anymore
+PRODUCT_SOONG_NAMESPACES += device/generic/goldfish-opengl
+BUILD_EMULATOR_OPENGL := true
+BUILD_EMULATOR_OPENGL_DRIVER := true
+ENABLE_GOLDFISH_OPENGL_FOLDER := true
+# hwcomposer3 - display HAL
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.composer3-service.ranchu
+endif

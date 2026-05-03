@@ -47,6 +47,7 @@
 
 # Display HAL - hwcomposer3
 /vendor/bin/hw/android.hardware.composer.hwc3-service.drm                               u:object_r:hal_graphics_composer_default_exec:s0
+/vendor/bin/hw/android\.hardware\.graphics\.composer3-service\.ranchu                   u:object_r:hal_graphics_composer_default_exec:s0
 /dev/dri/card0                                                                          u:object_r:gpu_device:s0
 
 # Temp
@@ -76,3 +77,6 @@
 /vendor/lib(64)?/android.hardware.camera.provider-V1-external-impl-rpi.so                   u:object_r:same_process_hal_file:s0
 /vendor/lib(64)?/camera.device-external-impl-rpi.so                                         u:object_r:same_process_hal_file:s0
 /vendor/bin/hw/android.hardware.camera.provider-V1-external-service-rpi                  u:object_r:hal_camera_default_exec:s0
+
+# V4L2 Codec2
+/vendor/bin/hw/android\.hardware\.media\.c2@1\.2-service-v4l2(.*)?                      u:object_r:mediacodec_exec:s0
