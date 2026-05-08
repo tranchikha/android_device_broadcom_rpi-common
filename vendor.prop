@@ -58,7 +58,7 @@ dalvik.vm.dex2oat-minidebuginfo=false
 dalvik.vm.minidebuginfo=false
 
 # Disable bootanimation
-debug.sf.nobootanimation=1
+#debug.sf.nobootanimation=1
 
 # Force enabling NavigationBar
 qemu.hw.mainkeys=0
