@@ -8,6 +8,12 @@ ro.hardware.vulkan=broadcom
 ## skiagl: Use OpenGL ES
 ## skiavk: Use Vulkan
 debug.hwui.renderer=skiavk
+
+# EGL multifile cache configure
+# Avoid warning
+# ANGLE   : GL performance: HIGH: EGL blobcache multifile is not enabled.
+ro.egl.blobcache.multifile=true
+ro.egl.blobcache.multifile_limit=134217728
 # hwc3
 ro.vendor.hwcomposer.display_finder_mode=drm
 ro.vendor.hwcomposer.mode=client
